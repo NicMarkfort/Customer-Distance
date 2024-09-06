@@ -59,6 +59,7 @@ namespace CustomerDistance_Calculator
 
         private async void SaveFileBtn_Click(object sender, RoutedEventArgs e)
         {
+            saveFileBtn.IsEnabled = false;
             try
             {
                 _dataTable = await _distanceFileService.UpdateDataTable(_dataTable, int.Parse(originTB.Text), int.Parse(destinationTB.Text), skipFirstRowCB.IsChecked.Value);
@@ -70,7 +71,6 @@ namespace CustomerDistance_Calculator
             }
             dataGrid.ItemsSource = null;
             dataGrid.ItemsSource = _dataTable.DefaultView;
-            saveFileBtn.IsEnabled = false;
             MessageBoxResult dialogResult = MessageBox.Show("Soll die Änderungen gespeichert werden?", "Speichern?", MessageBoxButton.YesNo);
             if (dialogResult != MessageBoxResult.Yes)
                 return;

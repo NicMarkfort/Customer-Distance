@@ -37,7 +37,6 @@ namespace CustomerDistance_Calculator.Utils
                         string cellValue = (excelRange.Cells[row, col] as Range).Text;
                         dataRow[col - 1] = cellValue;
                     }
-                    throw new ArgumentNullException("dfsf");
                     dataTable.Rows.Add(dataRow);
                 }
             }
