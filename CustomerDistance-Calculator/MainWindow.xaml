@@ -1,0 +1,23 @@
+﻿<Window x:Class="CustomerDistance_Calculator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CustomerDistance_Calculator"
+        mc:Ignorable="d"
+        Title="Customer-Distance" ResizeMode="NoResize" Height="450" Width="800" Icon="/distance (1).png">
+    <Grid>
+        <Button x:Name="readFileBtn" Content="Datei laden" HorizontalAlignment="Left" Margin="10,15,0,0" VerticalAlignment="Top" Width="111" Click="Button_Click" Height="24"/>
+        <DataGrid IsReadOnly="True" Name="dataGrid" AutoGenerateColumns="True" Margin="0,52,0,0"/>
+        <Grid>
+            <Label Content="Start-Feld(Index):" HorizontalAlignment="Left" Margin="143,3,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="originTB"  HorizontalAlignment="Left" Margin="148,23,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="120" PreviewTextInput="NumberValidationTextBox"/>
+        </Grid>
+        <Grid>
+            <Label Content="Ziel-Feld(Index):" HorizontalAlignment="Left" Margin="295,3,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="destinationTB"  HorizontalAlignment="Left" Margin="300,23,0,0" TextWrapping="Wrap" Text="2" VerticalAlignment="Top" Width="120" PreviewTextInput="NumberValidationTextBox"/>
+        </Grid>
+        <CheckBox x:Name="skipFirstRowCB" IsChecked="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="431,25,0,0" Content="Erste Zeile überspringen"></CheckBox>
+        <Button IsEnabled="False" x:Name="saveFileBtn" Content="Datei verarbeiten" HorizontalAlignment="Left" Margin="606,16,0,0" VerticalAlignment="Top" Width="167" Height="24" Click="SaveFileBtn_Click"/>
+    </Grid>
+</Window>
