@@ -28,14 +28,15 @@ namespace CustomerDistance_Calculator
         private readonly IFactory _factory;
         private readonly IDistanceFileService _distanceFileService;
 
-        private DataTable _dataTable;
+        private DataTable? _dataTable = null;
 
         public MainWindow()
         {
             InitializeComponent();
-            _factory = new DefaultFactory(); 
-            _distanceFileService = new DistanceExcelFileService(_factory.DistanceService);
             saveFileBtn.IsEnabled = false;
+
+            _factory = new DefaultFactory(); 
+            _distanceFileService = new DistanceExcelFileService(_factory);
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -59,10 +60,11 @@ namespace CustomerDistance_Calculator
 
         private async void SaveFileBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (_dataTable == null) return;
             saveFileBtn.IsEnabled = false;
             try
             {
-                _dataTable = await _distanceFileService.UpdateDataTable(_dataTable, int.Parse(originTB.Text), int.Parse(destinationTB.Text), skipFirstRowCB.IsChecked.Value);
+                _dataTable = await _distanceFileService.UpdateDataTable(_dataTable, GetInts(originTB.Text), GetInts(destinationTB.Text), skipFirstRowCB.IsChecked ?? false);
             }
             catch (Exception)
             {
@@ -88,8 +90,20 @@ namespace CustomerDistance_Calculator
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new ("[^0-9]+");
+            Regex regex = new(@"[^0-9;]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+
+        private static List<int> GetInts(string text)
+        {
+            List<int> ints = [];
+            foreach (string s in text.Split(';'))
+            {
+                if (int.TryParse(s, out int i))
+                    ints.Add(i);
+            }
+            return ints;
+        }
+
     }
 }

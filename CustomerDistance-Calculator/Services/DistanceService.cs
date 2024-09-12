@@ -25,11 +25,11 @@ namespace CustomerDistance_Calculator.Services
             
             var pointedAddress = locations.Where(location => location.Type == "Point Address").Select(location => location.Position).ToList();
             if (pointedAddress.Count > 0)
-                return pointedAddress.First();
+                return pointedAddress[0];
 
             var geographyAddress = locations.Where(location => location.Type == "Geography").Select(location => location.Position).ToList();
             if (geographyAddress.Count > 0)
-                return geographyAddress.First();
+                return geographyAddress[0];
 
             return locations[0].Position;
         }

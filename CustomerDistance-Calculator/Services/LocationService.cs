@@ -20,9 +20,7 @@ namespace CustomerDistance_Calculator.Services
         {
             PropertyNameCaseInsensitive = true
         };
-
         private static readonly string _uri = "https://atlas.microsoft.com/";
-        private HttpClient _httpClient = new ();
 
         public async Task<DistanceDto> GetDistance(AzurePositionDto origin, AzurePositionDto destination)
         {
@@ -59,7 +57,7 @@ namespace CustomerDistance_Calculator.Services
 
             string responseBody = await _request.Get(uriBuilder.ToString());
             AzureSearchResponseDto response = JsonSerializer.Deserialize<AzureSearchResponseDto>(responseBody, _options) ?? throw new Exception();
-            if (response?.Results == null || response.Results.Count == 0)
+            if (response.Results == null || response.Results.Count == 0)
                 throw new Exception();
 
             return response.Results;
