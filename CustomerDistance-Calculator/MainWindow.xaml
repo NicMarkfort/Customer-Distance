@@ -8,7 +8,9 @@
         Title="Customer-Distance" ResizeMode="NoResize" Height="450" Width="800" Icon="/distance (1).png">
     <Grid>
         <Button x:Name="readFileBtn" Content="Datei laden" HorizontalAlignment="Left" Margin="10,15,0,0" VerticalAlignment="Top" Width="111" Click="Button_Click" Height="24"/>
-        <DataGrid IsReadOnly="True" Name="dataGrid" AutoGenerateColumns="True" Margin="0,52,0,0"/>
+        <DataGrid IsReadOnly="True" Name="dataGrid" AutoGenerateColumns="True" Margin="0,86,0,0"/>
+        <ProgressBar x:Name="progressBar" HorizontalAlignment="Center" Height="14" Margin="0,67,0,0" VerticalAlignment="Top" Width="780"/>
+        <Label x:Name="statusLbl" Content="Label" HorizontalAlignment="Left" Margin="5,45,0,0" VerticalAlignment="Top"/>
         <Grid>
             <Label Content="Start-Feld(Index):" HorizontalAlignment="Left" Margin="143,3,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="originTB"  HorizontalAlignment="Left" Margin="148,23,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="120" PreviewTextInput="NumberValidationTextBox"/>

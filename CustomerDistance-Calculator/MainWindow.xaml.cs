@@ -34,6 +34,7 @@ namespace CustomerDistance_Calculator
         {
             InitializeComponent();
             saveFileBtn.IsEnabled = false;
+            statusLbl.Content = "";
 
             _factory = new DefaultFactory(); 
             _distanceFileService = new DistanceExcelFileService(_factory);
@@ -53,7 +54,14 @@ namespace CustomerDistance_Calculator
 
         private async Task LoadExcel(string fileName)
         {
-            _dataTable = await _distanceFileService.GetFileAsDataTable(fileName);
+            InitProgressBar("Laden...");
+            _dataTable = await _distanceFileService.GetFileAsDataTable(fileName, (status) =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    progressBar.Value = (status.Current / (double)status.Max) * 100;
+                });
+            });
             dataGrid.ItemsSource = _dataTable.DefaultView;
             saveFileBtn.IsEnabled = true;
         }
@@ -64,7 +72,14 @@ namespace CustomerDistance_Calculator
             saveFileBtn.IsEnabled = false;
             try
             {
-                _dataTable = await _distanceFileService.UpdateDataTable(_dataTable, GetInts(originTB.Text), GetInts(destinationTB.Text), skipFirstRowCB.IsChecked ?? false);
+                InitProgressBar("Verarbeiten...");
+                _dataTable = await _distanceFileService.UpdateDataTable(_dataTable, GetInts(originTB.Text), GetInts(destinationTB.Text), skipFirstRowCB.IsChecked ?? false, (status) =>
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        progressBar.Value = (status.Current / (double)status.Max) * 100;
+                    });
+                });
             }
             catch (Exception)
             {
@@ -85,7 +100,14 @@ namespace CustomerDistance_Calculator
             if (saveFileDialog.ShowDialog() != true)
                 return;
 
-            await _distanceFileService.SaveDataTable(saveFileDialog.FileName, _dataTable);
+            InitProgressBar("Speichern...");
+            await _distanceFileService.SaveDataTable(saveFileDialog.FileName, _dataTable, status =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    progressBar.Value = (status.Current / (double)status.Max) * 100;
+                });
+            });
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -103,6 +125,12 @@ namespace CustomerDistance_Calculator
                     ints.Add(i);
             }
             return ints;
+        }
+
+        private void InitProgressBar(string operation)
+        {
+            statusLbl.Content = operation;
+            progressBar.Value = 0;
         }
 
     }

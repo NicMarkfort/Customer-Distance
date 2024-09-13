@@ -9,18 +9,17 @@ namespace CustomerDistance_Calculator.Services
 {
     public class DistanceExcelFileService(IFactory _factory) : IDistanceFileService
     {
-        public Task<DataTable> GetFileAsDataTable(string filePath)
+        public async Task<DataTable> GetFileAsDataTable(string filePath, Action<StatusDto> status)
         {
-            return Task.FromResult(ExcelUtil.GetFileAsDataTable(filePath));
+            return await Task.Run(() => ExcelUtil.GetFileAsDataTable(filePath, status));
         }
 
-        public Task SaveDataTable(string filePath, DataTable dataTable)
+        public async Task SaveDataTable(string filePath, DataTable dataTable, Action<StatusDto> status)
         {
-            ExcelUtil.ExportDataSetToExcel(dataTable, filePath);
-            return Task.CompletedTask;
+            await Task.Run(() => ExcelUtil.ExportDataSetToExcel(dataTable, filePath, status));
         }
 
-        public async Task<DataTable> UpdateDataTable(DataTable dataTable, List<int> originIndex, List<int> destinationIndex, bool skipFirstRow)
+        public async Task<DataTable> UpdateDataTable(DataTable dataTable, List<int> originIndex, List<int> destinationIndex, bool skipFirstRow, Action<StatusDto> status)
         {
             int newIndex = dataTable.Columns.Count;
             dataTable.Columns.Add($"Spalte {newIndex + 1}");
@@ -47,7 +46,7 @@ namespace CustomerDistance_Calculator.Services
                 {
                     errors.Add("Zeile: " + (row + 1) + " (Origin: " + originAddress + " | Destination: " + destinationAddress + ")");
                 }
-
+                status.Invoke(new StatusDto { Current = row + 1, Max = dataTable.Rows.Count });
             }
             if (errors.Count > 0 && MessageBox.Show($"Es sind {errors.Count} Fehler augetreten! Soll die Verarbeitung abgebrochen werden?  Die folgenden Zeilen konnten nicht verarbeitet werden: \n - {string.Join("\n - ", errors)}", "Fehler augetreten", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 throw new Exception();

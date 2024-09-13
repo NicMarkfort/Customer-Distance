@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using CustomerDistance_Calculator.DTOs;
 using Microsoft.Office.Interop.Excel;
 using DataTable = System.Data.DataTable;
 using Range = Microsoft.Office.Interop.Excel.Range;
@@ -12,7 +13,7 @@ namespace CustomerDistance_Calculator.Utils
 {
     public static class ExcelUtil
     {
-        public static DataTable GetFileAsDataTable(string filePath)
+        public static DataTable GetFileAsDataTable(string filePath, Action<StatusDto> status)
         {
             DataTable dataTable = new();
 
@@ -38,6 +39,7 @@ namespace CustomerDistance_Calculator.Utils
                         dataRow[col - 1] = cellValue;
                     }
                     dataTable.Rows.Add(dataRow);
+                    status.Invoke(new StatusDto { Current = row, Max = rowCount });
                 }
             }
             catch (Exception ex)
@@ -56,7 +58,7 @@ namespace CustomerDistance_Calculator.Utils
             return dataTable;
         }
 
-        public static void ExportDataSetToExcel(DataTable dataTable, string filePath)
+        public static void ExportDataSetToExcel(DataTable dataTable, string filePath, Action<StatusDto> status)
         {
             Application excelApp = new();
 
@@ -81,6 +83,7 @@ namespace CustomerDistance_Calculator.Utils
                         string cellValue = dataRow[col - 1].ToString() ?? "";
                         worksheet.Cells[row, col] = cellValue;
                     }
+                    status.Invoke(new StatusDto { Current = row, Max = dataTable.Rows.Count });
                     row++;
                 }
                 workbook.SaveAs(filePath);
