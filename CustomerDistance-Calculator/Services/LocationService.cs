@@ -27,7 +27,8 @@ namespace CustomerDistance_Calculator.Services
             UriBuilder uriBuilder = new(_uri + "route/matrix/json");
             var queryParams = GetDefaultQueryParams();
             queryParams["waitForResults"] = "true";
-            queryParams["routeType"] = "shortest";
+            queryParams["routeType"] = "fastest";
+            queryParams["traffic"] = "true";
             uriBuilder.Query = queryParams.ToString();
 
             var requestBody = new AzureDistanceRequestDto(new AzureMultipointDto(origin.Lat, origin.Lon), new AzureMultipointDto(destination.Lat, destination.Lon));
