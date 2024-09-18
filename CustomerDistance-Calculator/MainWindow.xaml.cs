@@ -28,6 +28,7 @@ namespace CustomerDistance_Calculator
     {
         private readonly IFactory _factory;
         private readonly IDistanceFileService _distanceFileService;
+        private readonly IConfigService _configService;
 
         private DataTable? _dataTable = null;
 
@@ -37,7 +38,15 @@ namespace CustomerDistance_Calculator
             saveFileBtn.IsEnabled = false;
             statusLbl.Content = "";
 
-            _factory = new DefaultFactory(GetSubscriptionKey()); 
+            _configService = new ConfigService();
+            string subscriptionKey = "";
+
+            Application.Current.Dispatcher.Invoke(async () =>
+            {
+                subscriptionKey = await _configService.GetSubscriptionKey() ?? GetSubscriptionKey();
+            });
+            _configService.SaveSubscriptionKey(subscriptionKey);
+            _factory = new DefaultFactory(subscriptionKey); 
             _distanceFileService = new DistanceExcelFileService(_factory);
         }
 
