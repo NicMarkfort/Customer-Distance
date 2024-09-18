@@ -17,6 +17,7 @@ using CustomerDistance_Calculator.Factorys;
 using System.Diagnostics;
 using System.Data;
 using System.Text.RegularExpressions;
+using CustomerDistance_Calculator.Windows;
 
 namespace CustomerDistance_Calculator
 {
@@ -36,7 +37,7 @@ namespace CustomerDistance_Calculator
             saveFileBtn.IsEnabled = false;
             statusLbl.Content = "";
 
-            _factory = new DefaultFactory(); 
+            _factory = new DefaultFactory(GetSubscriptionKey()); 
             _distanceFileService = new DistanceExcelFileService(_factory);
         }
 
@@ -133,5 +134,12 @@ namespace CustomerDistance_Calculator
             progressBar.Value = 0;
         }
 
+        private string GetSubscriptionKey()
+        {
+            SubscriptionKeyWindow subscriptionKey = new();
+            if (!subscriptionKey.ShowDialog() ?? false)
+                return GetSubscriptionKey();
+            return subscriptionKey.SubscriptionsKey;
+        }
     }
 }
