@@ -28,6 +28,11 @@ namespace CustomerDistance_Calculator.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(SubscriptionsKey) || string.IsNullOrWhiteSpace(SubscriptionsKey))
+            {
+                MessageBox.Show("Bitte gebe einen Subscription-Key an!", "Subscription-Key");
+                return;
+            }
             DialogResult = true;
         }
 

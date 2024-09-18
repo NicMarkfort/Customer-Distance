@@ -138,7 +138,9 @@ namespace CustomerDistance_Calculator
         {
             SubscriptionKeyWindow subscriptionKey = new();
             if (!subscriptionKey.ShowDialog() ?? false)
-                return GetSubscriptionKey();
+            {
+                Environment.Exit(0);
+            }
             return subscriptionKey.SubscriptionsKey;
         }
     }
